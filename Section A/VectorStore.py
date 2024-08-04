@@ -29,7 +29,7 @@ collection = client.get_or_create_collection(name="pdf_texts")
 # Add text to collection without generating embeddings
 collection.add(
     documents=[pdf_text],
-    metadatas=[{"source": "sample.pdf"}],
+    metadatas=[{"source": "R20CSE3122-Artificial-Intelligence.pdf"}],
     ids=["pdf1"]
 )
 
