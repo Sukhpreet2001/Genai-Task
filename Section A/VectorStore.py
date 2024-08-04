@@ -21,7 +21,7 @@ if storage_path is None:
 client = PersistentClient(path=storage_path)
 
 # Extract text from PDF
-pdf_text = extract_text_from_pdf('sample.pdf')
+pdf_text = extract_text_from_pdf('R20CSE3122-Artificial-Intelligence.pdf')
 
 # Create or get the collection
 collection = client.get_or_create_collection(name="pdf_texts")
