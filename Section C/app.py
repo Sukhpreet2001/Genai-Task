@@ -1,23 +1,35 @@
 import streamlit as st
 import requests
 
-st.title('Query Vector Database')
+# Define the URL of your deployed FastAPI app on Google Cloud Run
+api_url = "http://localhost:8080/query/"
 
-# Input field for the user to enter a query
-query = st.text_input('Enter your query:')
+# Function to query the API with the user's input
+def query_api(query_text):
+    response = requests.post(api_url, json={"query": query_text})
+    return response.json()
 
-# Button to submit the query
-if st.button('Submit'):
-    if query:
-        try:
-            # Send POST request to your FastAPI endpoint
-            response = requests.post('YOUR_API_URL/query', json={'query': query})
-            response.raise_for_status()  # Check for HTTP errors
-            result = response.json()  # Parse JSON response
-            
-            # Display the result
-            st.write('Result:', result)
-        except requests.exceptions.RequestException as e:
-            st.error(f'Error querying the API: {e}')
+# Streamlit app layout
+st.title("Document Query Interface")
+
+# Input for the query
+query_text = st.text_input("Enter your query:")
+
+# Button to trigger the query
+if st.button("Search"):
+    if query_text:
+        # Query the API
+        response_json = query_api(query_text)
+
+        # Extract the documents from the response
+        documents = response_json.get("documents", [[]])[0]
+        
+        if documents:
+            st.subheader("Search Results:")
+            for doc in documents:
+                st.write(doc)
+        else:
+            st.write("No documents found.")
     else:
-        st.write('Please enter a query.')
+        st.write("Please enter a query.")
+
