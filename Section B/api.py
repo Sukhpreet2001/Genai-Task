@@ -26,6 +26,8 @@ async def query_collection(request: QueryRequest):
         n_results=5  # Adjust as needed
     )
     
+    print("Query Results:", results)  # Add this line to log results
+
     if not results:
         raise HTTPException(status_code=404, detail="No results found")
     
