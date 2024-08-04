@@ -1,22 +1,23 @@
-import gradio as gr
+import streamlit as st
 import requests
 
-# Function to query your API
-def query_api(question):
-    response = requests.post("YOUR_API_ENDPOINT", json={"question": question})
-    if response.status_code == 200:
-        return response.json().get("result", "No result found")
+st.title('Query Vector Database')
+
+# Input field for the user to enter a query
+query = st.text_input('Enter your query:')
+
+# Button to submit the query
+if st.button('Submit'):
+    if query:
+        try:
+            # Send POST request to your FastAPI endpoint
+            response = requests.post('YOUR_API_URL/query', json={'query': query})
+            response.raise_for_status()  # Check for HTTP errors
+            result = response.json()  # Parse JSON response
+            
+            # Display the result
+            st.write('Result:', result)
+        except requests.exceptions.RequestException as e:
+            st.error(f'Error querying the API: {e}')
     else:
-        return "Error querying the API"
-
-# Create the Gradio interface
-iface = gr.Interface(
-    fn=query_api,
-    inputs="text",
-    outputs="text",
-    title="Query Interface",
-    description="Enter a question to query the Chroma database"
-)
-
-if __name__ == "__main__":
-    iface.launch()
+        st.write('Please enter a query.')
