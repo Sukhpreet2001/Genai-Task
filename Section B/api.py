@@ -5,8 +5,8 @@ from sentence_transformers import SentenceTransformer
 
 app = FastAPI()
 
-# Load Chroma client
-client = chromadb.PersistentClient(path=r'C:\Users\Sukhpreet Kaur\Documents\Genai Task\local_db')
+# Use the relative path that matches the volume mount point in the Docker container
+client = chromadb.PersistentClient(path='/app/local_db')
 
 collection = client.get_or_create_collection(name="pdf_texts")
 
@@ -28,7 +28,7 @@ async def query_collection(request: QueryRequest):
     
     print("Query Results:", results)  # Add this line to log results
 
-    if not results:
+    if not results or not results['documents'][0]:
         raise HTTPException(status_code=404, detail="No results found")
     
     return results
